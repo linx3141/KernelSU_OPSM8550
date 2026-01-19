@@ -14,14 +14,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - name: Enable swap
-        run: |
-          sudo fallocate -l 16G /swapfile
-          sudo chmod 600 /swapfile
-          sudo mkswap /swapfile
-          sudo swapon /swapfile
-          free -h
-          
+
       - name: Install build dependencies
         run: |
             sudo apt update
