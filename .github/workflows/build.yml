@@ -69,7 +69,9 @@ jobs:
           python3 \
           curl \
           dwarves \
-          cpio
+          cpio \
+          gcc-aarch64-linux-gnu
+          
       - name: Clone Kernel Source
         run: |
           git clone --depth=1 -b ${{ inputs.kernel_branch }} https://github.com/${{ inputs.kernel_source }}/android_kernel_oneplus_sm8550.git sm8550
