@@ -119,7 +119,10 @@ jobs:
           touch ./.scmversion
           
           make O=out vendor/sm8150-perf_defconfig vendor/oplus.config
-          echo "CONFIG_KSU_TAMPER_SYSCALL_TABLE=y" >> out/.config
+          if [[ "${{ inputs.ksu_type }}" == "KernelSU-by-xx" ]]; then
+            echo "CONFIG_KSU_TAMPER_SYSCALL_TABLE=y" >> out/.config
+          fi
+          
           make -j2 O=out Image
 
       - name: Make AnyKernel3
