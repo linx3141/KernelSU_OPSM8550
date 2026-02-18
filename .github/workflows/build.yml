@@ -24,6 +24,16 @@ on:
           - crdroidandroid
           - Waffle-SM8650
           - Sukimoka
+
+      module_source:
+        description: Kernel Module Source Code
+        required: true
+        type: choice
+        options:
+          - LineageOS
+          - crdroidandroid
+          - Waffle-SM8650
+          - Sukimoka
           
       kernel_branch:
         description: Kernel Branch(such as lineage-23.2 sixteen-qpr1)
@@ -82,7 +92,7 @@ jobs:
       - name: Clone Kernel Source
         run: |
           git clone --depth=1 -b ${{ inputs.kernel_branch }} https://github.com/${{ inputs.kernel_source }}/android_kernel_oneplus_${SOC}.git ${SOC}
-          git clone --depth=1 -b ${{ inputs.kernel_branch }} https://github.com/${{ inputs.kernel_source }}/android_kernel_oneplus_${SOC}-modules.git ${SOC}-modules
+          git clone --depth=1 -b ${{ inputs.kernel_branch }} https://github.com/${{ inputs.module_source }}/android_kernel_oneplus_${SOC}-modules.git ${SOC}-modules
 
       - name: Download AOSP Clang
         run: |
