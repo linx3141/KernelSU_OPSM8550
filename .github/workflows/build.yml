@@ -55,6 +55,15 @@ on:
         required: false
         type: string
         default: ""
+
+      enable_rekernel:
+        description: "Integrate Re:Kernel (Netlink tombstone module)"
+        required: true
+        type: choice
+        default: "false"
+        options:
+          - "false"
+          - "true"
           
 jobs:
   Kernel_CI:
@@ -89,7 +98,8 @@ jobs:
           curl \
           dwarves \
           cpio \
-          gcc-aarch64-linux-gnu
+          gcc-aarch64-linux-gnu \
+          openjdk-17-jdk-headless
           
       - name: Clone Kernel Source
         run: |
@@ -103,6 +113,33 @@ jobs:
 
           curl -LO https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/android16-qpr2-release/${{ inputs.clang_version }}.tar.gz
           tar -xf "${{ inputs.clang_version }}.tar.gz" -C ${{ inputs.clang_version }}
+
+      - name: Integrate Re:Kernel
+        if: ${{ inputs.enable_rekernel == 'true' }}
+        run: |
+          echo ">>> Downloading Re:Kernel Kernel Modifier..."
+          MODIFIER_URL=$(curl -s https://api.github.com/repos/Sakion-Team/Re-Kernel/releases \
+            | python3 -c "
+          import sys, json
+          releases = json.load(sys.stdin)
+          for r in releases:
+              for a in r.get('assets', []):
+                  if a['name'].endswith('.jar'):
+                      print(a['browser_download_url'])
+                      sys.exit(0)
+          ")
+          if [ -z "${MODIFIER_URL}" ]; then
+            echo "ERROR: Could not find Kernel Modifier jar in Re:Kernel releases!"
+            exit 1
+          fi
+          echo "Modifier URL: ${MODIFIER_URL}"
+          curl -L -o KernelModifier.jar "${MODIFIER_URL}"
+
+          echo ">>> Running Re:Kernel Kernel Modifier on kernel source..."
+          cp KernelModifier.jar ${SOC}/
+          cd ${SOC}
+          java -jar KernelModifier.jar
+          echo ">>> Re:Kernel integration complete."
 
       - name: Compile Kernel
         run: |
@@ -189,13 +226,30 @@ jobs:
 
       - name: Make AnyKernel3
         run: |
+          # 若启用 ReKernel，将编译好的 re-kernel.ko 一同打包进刷机包
           ZIP_NAME="${{ inputs.ksu_type }}_$(date -u +"%Y%m%d_%H%M")"
+          if [[ "${{ inputs.enable_rekernel }}" == "true" ]]; then
+            ZIP_NAME="ReKernel_${ZIP_NAME}"
+          fi
           git clone https://github.com/Kernel-SU/AnyKernel3.git
 
           cp ${SOC}/out/arch/arm64/boot/Image AnyKernel3/Image
           cp ${SOC}/out/arch/arm64/boot/Image ./Image
-          cd AnyKernel3
 
+          # 把所有编译出的 .ko 复制到刷机包（含 re-kernel.ko）
+          if [[ "${{ inputs.enable_rekernel }}" == "true" ]]; then
+            KO_FILES=$(find ${SOC}/out -name "*.ko" 2>/dev/null)
+            if [ -n "${KO_FILES}" ]; then
+              mkdir -p AnyKernel3/modules/system/lib/modules
+              echo "${KO_FILES}" | xargs -I{} cp {} AnyKernel3/modules/system/lib/modules/
+              echo "Packaged kernel modules:"
+              ls AnyKernel3/modules/system/lib/modules/
+            else
+              echo "WARNING: No .ko files found; Re:Kernel may have been integrated inline."
+            fi
+          fi
+
+          cd AnyKernel3
           zip -r9 ../"${ZIP_NAME}.zip" * -x .git
 
       - name: Create GitHub Release
