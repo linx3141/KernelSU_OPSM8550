@@ -163,7 +163,7 @@ jobs:
 
             # Fix Bug 2: remove orphaned 'proc_task' declaration
             # (safe to remove because the surrounding usage code was never inserted)
-            sed -i '/struct task_struct \*proc_task[[:space:]]*=.*binder_get_task/d' "${BINDER_FILE}"
+            sed -i '/struct task_struct[[:space:]]*\*[[:space:]]*proc_task[[:space:]]*=/d' "${BINDER_FILE}"
 
             echo ">>> Post-modifier fixes applied."
           fi
