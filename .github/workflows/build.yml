@@ -75,7 +75,14 @@ jobs:
           
       - name: Clone Kernel Source
         run: |
-          git clone --depth=1 -b ${{ inputs.kernel_branch }} https://github.com/${{ inputs.kernel_source }}/android_kernel_oneplus_${SOC}.git ${SOC}
+          case "${{ inputs.kernel_source }}" in
+            "yaap")
+              git clone --depth=1 -b ${{ inputs.kernel_branch }} https://github.com/yaap/kernel_oneplus_${SOC}.git ${SOC}
+              ;;
+            *)
+              git clone --depth=1 -b ${{ inputs.kernel_branch }} https://github.com/${{ inputs.kernel_source }}/android_kernel_oneplus_${SOC}.git ${SOC}
+              ;;
+          esac
 
       - name: Download AOSP Clang
         run: |
