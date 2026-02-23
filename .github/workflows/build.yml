@@ -145,9 +145,16 @@ jobs:
             echo "CONFIG_KSU_SUSFS_SPOOF_CMDLINE_OR_BOOTCONFIG=y" >> arch/arm64/configs/vendor/sm8150-perf_defconfig
             echo "CONFIG_KSU_SUSFS_SUS_MAP=y" >> arch/arm64/configs/vendor/sm8150-perf_defconfig
           fi
-          
-          make O=out vendor/sm8150-perf_defconfig vendor/oplus.config
 
+          case "${{ inputs.kernel_source }}" in
+            "yaap")
+              make O=out gulch_defconfig vendor/debugfs.config
+              ;;
+            *)
+              make O=out vendor/sm8150-perf_defconfig vendor/oplus.config
+              ;;
+          esac
+              
           if [[ "${{ inputs.ksu_type }}" == "KernelSU-by-xx" ]]; then
             echo "CONFIG_KSU_TAMPER_SYSCALL_TABLE=y" >> out/.config
           fi
