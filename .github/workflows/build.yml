@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       brand:
-        description: "Brand: Select your brand"
+        description: "Brand: Select your brand 选择你的机型品牌"
         required: true
         type: choice
         default: oneplus
@@ -15,19 +15,19 @@ on:
           - sony
 
       brand_manual:
-        description: "Brand-Manual: If selected Manual-Type in previous options, manually type ur brand"
+        description: "Brand-Manual: If selected Manual-Type in previous options, manually type ur brand 如果你在上一个选项选择了手动选项 请手动输入你的机型品牌"
         required: false
         type: string
         default: ""
 
       soc:
-        description: "SOC: Type your soc"
+        description: "SOC: Type your soc 输入你设备的处理器代号 如smxxx mtxxx"
         required: true
         type: string
         default: "sm8550"
 
       clang_version:
-        description: "Clang-Version: Select the clang version of ur kernel"
+        description: "Clang-Version: Select the clang version of ur kernel 选择你的内核时编译的Clang版本"
         required: true
         type: choice
         default: clang-r563880c
@@ -41,7 +41,7 @@ on:
           - clang-r596125   #lineage-24.0? in android17-release
           
       kernel_source:
-        description: "Kernel-Source: Kernel repo's org/user on github"
+        description: "Kernel-Source: Kernel repo's org/user on github 输入内核源码仓库的所有者"
         required: true
         type: choice
         default: LineageOS
@@ -63,13 +63,13 @@ on:
           - OnePlus12R-development
 
       kernel_source_manual:
-        description: "Kernel-Source-Manual: If u selected Manual-Type in previous options, manually type ur repo's org/user on github here."
+        description: "Kernel-Source-Manual: If u selected Manual-Type in previous options, manually type ur repo's org/user on github here 如果你在上一选项选择了手动输入 请手动输入内核源码仓库的所有者."
         required: false
         type: string
         default: ""
 
       kernel_source_format:
-        description: "Source-Format: Select ur kernel source format(1 for los etc. 2 for yaap etc.)(keep default if u dont know)"
+        description: "Source-Format: Select ur kernel source format(1 for los etc. 2 for yaap etc.)(keep default if u dont know) 输入你的内核源码仓库的开头字符 第一个选项是给los用的 第二个选项是给yaap用的 不知道就保持默认就好了"
         required: true
         type: choice
         default: android_kernel
@@ -78,13 +78,13 @@ on:
           - kernel
 
       kernel_branch:
-        description: "Kernel-Branch: such as lineage-23.2 sixteen-qpr1 etc."
+        description: "Kernel-Branch: such as lineage-23.2 sixteen-qpr1 etc. 输入你的内核源码仓库分支"
         required: true
         type: string
         default: "lineage-23.2"
         
       kernel_configs:
-        description: "Kernel-Configs: Select ur kernel configs(Use Manual-Type to custom it)"
+        description: "Kernel-Configs: Select ur kernel configs(Use Manual-Type to custom it) 选择编译内核使用的config文件 如果要自定义请看下面的选项"
         required: true
         type: choice
         default: oplus-sm8550-los
@@ -100,13 +100,13 @@ on:
           - oplus-sm8750-los
 
       kernel_configs_manual:
-        description: "Kernel-Configs-Manual: If u selected Manual-Type in previous options, manually type ur kernel configs here."
+        description: "Kernel-Configs-Manual: If u selected Manual-Type in previous options, manually type ur kernel configs here. 如果你在上一选项选择了手动输入 请在这里输入编译内核使用的config文件在哪里"
         required: false
         type: string
         default: ""
 
       ksu_type:
-        description: "KSU: KernelSU Version"
+        description: "KSU: KernelSU Version 请选择要编译进内核的KernelSU版本"
         required: true
         type: choice
         default: None
@@ -121,7 +121,7 @@ on:
           - ReSukiSU-with-susfs
 
       susfs-gki:
-        description: "SUSFS-GKI: select ur kernel version(for gki)"
+        description: "SUSFS-GKI: select ur kernel version(for gki) 如果需要SuSFS GKI 请选择你的GKI内核KMI版本"
         required: true
         type: choice
         default: None
@@ -134,9 +134,10 @@ on:
           - android14-6.1
           - android15-6.6
           - android16-6.12
+          - android17-6.18 
 
       susfs-nongki:
-        description: "SUSFS-NONGKI: select ur kernel version(for nongki)"
+        description: "SUSFS-NONGKI: select ur kernel version(for nongki) 如果需要SuSFS NonGkI 请选择你的NonGKI内核版本"
         required: true
         type: choice
         default: None
@@ -163,43 +164,55 @@ on:
           - "3.18"
 
       has_modules_repo:
-        description: "Has-Modules-Repo: Enable this ur kernel has modules repo(mostly for gki 2.0)"
+        description: "Has-Modules-Repo: Enable this ur kernel has modules repo(mostly for gki 2.0) 如果你的内核是有modules repo请启用他(一般只有GKI2.0有)"
         required: true
         type: boolean
         default: true
 
       enable_tmpfs-xattr:
-        description: "TMPFS_XATTR: U can enable this if ur kernel has no CONFIG_TMPFS_XATTR=y"
+        description: "TMPFS_XATTR: U can enable this if ur kernel has no CONFIG_TMPFS_XATTR=y 你可以启用他如果你的内核CONFIG_TMPFS_XATTR是关闭状态"
         required: true
         type: boolean
         default: false
+        
+      enable_config:
+        description: "EnableConfig: U can enable some config in kernel 你可以启用一些config在内核中"
+        required: false
+        type: string
+        default: ""
 
+      disable_config:
+        description: "DisableConfig: U can disable some config in kernel 你可以禁用一些config在内核中"
+        required: false
+        type: string
+        default: ""
+        
       enable_gcc:
-        description: "Enable-GCC: Enable the GCC support(mostly for 4.14 and below)"
+        description: "Enable-GCC: Enable the GCC support(mostly for 4.14 and below) 启用GCC支持(一般4.14或以前的内核启用)"
         required: true
         type: boolean
         default: false
       
       enable_gcc_32bits:
-        description: "Enable-GCC-32Bits: Enable the 32Bits GCC support(mostly for 4.9 and below)"
+        description: "Enable-GCC-32Bits: Enable the 32Bits GCC support(mostly for 4.9 and below) 启用GCC32位支持 (一般4.9或以前的内核启用"
         required: true
         type: boolean
         default: false
 
       fuck_modules_sig_protect:
-        description: "Fuck-Modules-Sig-Protect: FUCK MODULES SIG Protect(maybe need for 6.1)"
+        description: "Fuck-Modules-Sig-Protect: FUCK MODULES SIG Protect(maybe need for 6.1) 伪造ModuleSign状态 (可能在6.1需要)"
         required: true
         type: boolean
         default: false
 
       fuck_werror:
-        description: "Fuck-Werror: FUCK WERROR IN CONFIGS(by disable WERROR and CC_WERROR)"
+        description: "Fuck-Werror: FUCK WERROR IN CONFIGS(by disable WERROR and CC_WERROR) 伪造Werror在config (在config禁用werror情况下)"
         required: true
         type: boolean
         default: false
 
       enable_my_own_susfs_patch:
-        description: "Fuck susfs: apply patches in patches dir about susfs"
+        description: "Fuck susfs: apply patches in patches dir about susfs 关于SuSFS应用补丁在补丁的文件夹里"
         required: true
         type: boolean
         default: false
@@ -214,7 +227,7 @@ jobs:
       actions: read
       checks: read
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       
       - name: Setup SWAP
         uses: pierotofy/set-swap-space@master
@@ -225,18 +238,13 @@ jobs:
         run: |
           sudo apt update
           sudo apt install -y \
-          bc bison flex \
           libssl-dev \
           libelf-dev \
           libdw-dev \
           build-essential \
-          lz4 \
-          git \
-          python3 \
-          curl \
           dwarves \
-          cpio \
-          gcc-aarch64-linux-gnu
+          gcc-aarch64-linux-gnu \
+          linux-tools-common 
           
       - name: Save options
         run: |
@@ -257,12 +265,14 @@ jobs:
             echo "droidspaces:${{ inputs.droidspaces }}"
             echo "has_modules_repo:${{ inputs.has_modules_repo }}"
             echo "enable_tmpfs-xattr:${{ inputs.enable_tmpfs-xattr }}"
+            echo "enable_config:{{ inputs.enable_config }}"
             echo "enable_gcc:${{ inputs.enable_gcc }}"
             echo "enable_gcc_32bits:${{ inputs.enable_gcc_32bits }}"
             echo "fuck_modules_sig_protect:${{ inputs.fuck_modules_sig_protect }}"
             echo "fuck_werror:${{ inputs.fuck_werror }}"
             echo "enable_my_own_susfs_patch:${{ inputs.enable_my_own_susfs_patch }}"
           } | tee -a options.txt
+          
       - name: Clone Kernel Source
         run: |
           if [[ "${{ inputs.brand }}" == "Manual-Type" ]]; then
@@ -343,7 +353,7 @@ jobs:
             "None")
               ;;
 
-            "Official-KernelSU")
+            "KernelSU")
               curl -LSs "https://raw.githubusercontent.com/tiann/KernelSU/refs/heads/main/kernel/setup.sh" | bash -s main || exit 1
               ;;
 
@@ -586,6 +596,22 @@ jobs:
 
           fi
 
+          if [[ "${{ inputs.enable_config }}" == "true" ]]; then
+
+            sed -i '/${{ inputs.enable_config }}/d' arch/arm64/configs/${configs_list[0]}
+            echo ${{ inputs.enable_tmpfs-xattr }}=y" >> arch/arm64/configs/${configs_list[0]}
+            echo "Enabled U input config"
+
+          fi
+
+          if [[ "${{ inputs.disable_config }}" == "true" ]]; then
+
+            sed -i '/${{ inputs.disable_config }}/d' arch/arm64/configs/${configs_list[0]}
+            echo ${{ inputs.disable_tmpfs-xattr }}=n" >> arch/arm64/configs/${configs_list[0]}
+            echo "Disabled U input config"
+
+          fi
+          
           if [[ "${{ inputs.fuck_werror }}" == "true" ]]; then
 
             sed -i '/CONFIG_CC_WERROR/d' arch/arm64/configs/${configs_list[0]}
