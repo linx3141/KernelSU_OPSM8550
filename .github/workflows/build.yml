@@ -163,6 +163,12 @@ on:
           - 4.4-4.9
           - "3.18"
 
+      nomount:
+        description: "EnableNoMount: U can enable NoMount in kernel 你可以启用NoMount在内核中"
+        required: true
+        type: boolean
+        default: false
+        
       has_modules_repo:
         description: "Has-Modules-Repo: Enable this ur kernel has modules repo(mostly for gki 2.0) 如果你的内核是有modules repo请启用他(一般只有GKI2.0有)"
         required: true
@@ -495,6 +501,10 @@ jobs:
 
           fi
 
+           if [[ "${{ inputs.nomount }}" == "true" ]]; then
+           curl https://raw.githubusercontent.com/maxsteeel/nomount/refs/heads/dev/kernel/setup.sh | bash -
+           fi
+           
           touch ./.scmversion
 
       - name: Make Kernel Configs
@@ -596,10 +606,16 @@ jobs:
 
           fi
 
+          if [[ "${{ inputs.nomount }}" == "true" ]]; then
+           sed -i '/CONFIG_NOMOUNT/d' arch/arm64/configs/${configs_list[0]}
+            echo CONFIG_NOMOUNT=y" >> arch/arm64/configs/${configs_list[0]}
+            echo "Enabled NoMount"
+          fi
+           
           if [[ "${{ inputs.enable_config }}" == "true" ]]; then
 
             sed -i '/${{ inputs.enable_config }}/d' arch/arm64/configs/${configs_list[0]}
-            echo ${{ inputs.enable_tmpfs-xattr }}=y" >> arch/arm64/configs/${configs_list[0]}
+            echo ${{ inputs.enable_config }}=y" >> arch/arm64/configs/${configs_list[0]}
             echo "Enabled U input config"
 
           fi
@@ -607,7 +623,7 @@ jobs:
           if [[ "${{ inputs.disable_config }}" == "true" ]]; then
 
             sed -i '/${{ inputs.disable_config }}/d' arch/arm64/configs/${configs_list[0]}
-            echo ${{ inputs.disable_tmpfs-xattr }}=n" >> arch/arm64/configs/${configs_list[0]}
+            echo ${{ inputs.disable_config }}=n" >> arch/arm64/configs/${configs_list[0]}
             echo "Disabled U input config"
 
           fi
