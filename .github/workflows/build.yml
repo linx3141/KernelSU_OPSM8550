@@ -38,6 +38,7 @@ on:
           - clang-r536225   #lineage-22.2 in android15-qpr2-release
           - clang-r547379   #lineage-23.0 in android16-qpr3-release
           - clang-r563880c  #lineage-23.2 in android16-qpr3-release
+          - clang-r596125   #lineage-24.0? in android17-release
           
       kernel_source:
         description: "Kernel-Source: Kernel repo's org/user on github"
@@ -319,7 +320,10 @@ jobs:
             "clang-r563880c")
             curl -LO https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/android16-qpr2-release/clang-r563880c.tar.gz || exit 1
             ;;
-
+             
+            "clang-r596125")
+            curl -Lo https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/android17-release/clang-r596125.tar.gz |｜ exit 1
+            ;;
           esac
 
           mkdir -p toolchains/${{ inputs.clang_version }}
