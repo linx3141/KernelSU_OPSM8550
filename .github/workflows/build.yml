@@ -105,6 +105,18 @@ on:
         type: string
         default: ""
 
+      enable_config:
+        description: "EnableConfig: U can enable some config in kernel 你可以启用一些config在内核中"
+        required: false
+        type: string
+        default: ""
+
+      disable_config:
+        description: "DisableConfig: U can disable some config in kernel 你可以禁用一些config在内核中"
+        required: false
+        type: string
+        default: ""
+        
       ksu_type:
         description: "KSU: KernelSU Version 请选择要编译进内核的KernelSU版本"
         required: true
@@ -180,18 +192,6 @@ on:
         required: true
         type: boolean
         default: false
-        
-      enable_config:
-        description: "EnableConfig: U can enable some config in kernel 你可以启用一些config在内核中"
-        required: false
-        type: string
-        default: ""
-
-      disable_config:
-        description: "DisableConfig: U can disable some config in kernel 你可以禁用一些config在内核中"
-        required: false
-        type: string
-        default: ""
         
       enable_gcc:
         description: "Enable-GCC: Enable the GCC support(mostly for 4.14 and below) 启用GCC支持(一般4.14或以前的内核启用)"
@@ -272,6 +272,7 @@ jobs:
             echo "has_modules_repo:${{ inputs.has_modules_repo }}"
             echo "enable_tmpfs-xattr:${{ inputs.enable_tmpfs-xattr }}"
             echo "enable_config:{{ inputs.enable_config }}"
+            echo "disable_config:{{ inputs.disable_config }}"
             echo "enable_gcc:${{ inputs.enable_gcc }}"
             echo "enable_gcc_32bits:${{ inputs.enable_gcc_32bits }}"
             echo "fuck_modules_sig_protect:${{ inputs.fuck_modules_sig_protect }}"
