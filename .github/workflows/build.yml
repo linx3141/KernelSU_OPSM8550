@@ -386,7 +386,7 @@ jobs:
 
           esac
 
-
+ 
           if [[ "${{ inputs.droidspaces }}" == "6.12" ]]; then
 
             curl -Lo patch-for-6.12.patch https://raw.githubusercontent.com/ravindu644/Droidspaces-OSS/refs/heads/main/Documentation/resources/kernel-patches/GKI/kernel-6.12/001.GKI-6.12-or-above-fix_sysvipc_kabi.patch || exit 1
@@ -440,13 +440,17 @@ jobs:
 
             cp ${GITHUB_WORKSPACE}/configs/droidspaces-nongki.config arch/arm64/configs/vendor/droidspaces.config
 
-          fi
+          elif [[ "${{ inputs.droidspaces }}" == "None" ]]; then
+          
+          ui_pint "Skiped DroidSpaces"
 
+          fi
+          
           if [[ "${{ inputs.ksu_type }}" == *susfs* ]]; then
 
             if [[ "${{ inputs.susfs-gki }}" == "None" && "${{ inputs.susfs-nongki }}" == "None" ]]; then
 
-              echo "skip susfs"
+              echo "Skiped SuSFS"
 
             elif [[ "${{ inputs.susfs-gki }}" != "None" && "${{ inputs.susfs-nongki }}" != "None" ]]; then
 
@@ -635,7 +639,7 @@ jobs:
             sed -i '/CONFIG_WERROR/d' arch/arm64/configs/${configs_list[0]}
             echo "CONFIG_CC_WERROR=n" >> arch/arm64/configs/${configs_list[0]}
             echo "CONFIG_WERROR=n" >> arch/arm64/configs/${configs_list[0]}
-            echo "Disabled WERROR and CC_WERROR"
+            echo "Disabled WERROR"
 
           fi
 
@@ -657,7 +661,7 @@ jobs:
           if [[ "${{ inputs.ksu_type }}" == *susfs* ]]; then
 
             echo "CONFIG_KSU_SUSFS=y" >> arch/arm64/configs/${configs_list[0]}
-            echo "Enabled KSU_SUSFS"
+            echo "Enabled SuSFS"
 
           fi
 
