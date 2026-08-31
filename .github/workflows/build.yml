@@ -161,7 +161,7 @@ on:
           - "5.4"
 
       droidspaces:
-        description: "DroidSpaces: Enable DroidSpaces"
+        description: "DroidSpaces: Enable DroidSpaces 启用DroidSpaces"
         required: true
         type: choice
         default: None
