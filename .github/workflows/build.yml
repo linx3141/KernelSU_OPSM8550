@@ -176,7 +176,7 @@ on:
           - "3.18"
 
       nomount:
-        description: "EnableNoMount: U can enable NoMount in kernel 你可以启用NoMount在内核中"
+        description: "NoMount: U can enable NoMount in kernel 你可以启用NoMount在内核中"
         required: true
         type: boolean
         default: false
@@ -358,6 +358,7 @@ jobs:
           case "${{ inputs.ksu_type }}" in
 
             "None")
+              ui_print "Skiped KernelSU"
               ;;
 
             "KernelSU")
@@ -457,6 +458,11 @@ jobs:
               echo "what do you mean???, why selected susfs for gki and nongki at the same time"
               exit 1
 
+            elif [[ "${{ inputs.susfs-gki }}" == "None" && "${{ inputs.susfs-nongki }}" == "None" ]]; then
+
+              echo "Skiped SuSFS"
+              exit 1
+              
             elif [[ "${{ inputs.susfs-gki }}" != "None" ]]; then
 
               git clone -b gki-${{ inputs.susfs-gki }} https://gitlab.com/simonpunk/susfs4ksu.git susfs || exit 1
